@@ -51,3 +51,6 @@ Removed the introductory copy, personal-best card, pro-tip card, instructions si
 Drop MP3 files into `sounds/` (see `sounds/README.txt` for the 7 names). They load as Web Audio buffers for zero-latency playback and are cached for offline play. Any missing file falls back to the old synthesized beep. Cache bumped to v4.
 
 v4: sound is on by default; users who muted it keep it muted.
+
+## Version 7 — themes by score
+`backgrounds/` and `pieces/` hold the artwork; `themes.json` lists worlds in score order (see `THEMES-README.txt`). Score reaching a world's `minScore` fades the new background and piece colours in. Paddle raised (PAD_BOTTOM 104). Service worker pre-caches everything in themes.json; images use stale-while-revalidate, themes.json is network-first. Old root `background.webp` and `bubble.webp` moved into the folders.

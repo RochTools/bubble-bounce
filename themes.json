@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Forest Lake",
+    "minScore": 0,
+    "background": "backgrounds/forest.webp",
+    "piece": "pieces/crystal.webp",
+    "tint": true,
+    "veil": 0.5,
+    "colors": ["#2f7cf6", "#1fbf6b", "#ec3b52", "#f5a60b", "#8b5cf6"]
+  },
+  {
+    "name": "Sunset Hills",
+    "minScore": 700,
+    "background": "backgrounds/sunset.webp",
+    "piece": "pieces/crystal.webp",
+    "tint": true,
+    "veil": 0.2,
+    "colors": ["#ff5d73", "#ff9f1c", "#ffd23f", "#e754b4", "#7c5cff"]
+  },
+  {
+    "name": "Starry Night",
+    "minScore": 1600,
+    "background": "backgrounds/night.webp",
+    "piece": "pieces/crystal.webp",
+    "tint": true,
+    "veil": 0.1,
+    "colors": ["#38b6ff", "#2ee6a6", "#d96bff", "#ffd23f", "#ff7a8a"]
+  }
+]
