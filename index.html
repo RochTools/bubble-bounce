@@ -107,7 +107,7 @@ const VW=360;                       // logical width (px). Height follows the sc
 const MAX_RATIO=1.95;               // never taller than this (height/width) -> no "cricket ground"
 const PAD_BOTTOM=64;                // paddle sits above the bottom edge, clear of gesture bars
 const BR=12;                        // bubble radius (12 bubbles per row)
-const COLORS=['#b5a0ff','#91bdff','#7fe4df','#92efc4','#f6cf90'];
+const COLORS=['#2f7cf6','#1fbf6b','#ec3b52','#f5a60b','#8b5cf6'];   // deep blue, green, red, amber, violet
 
 let W=VW,H=600,scale=1,dpr=1,state='menu',score=0,level=1,lives=3,best=0,combo=0;
 let balls=[],particles=[],rings=[],keys={},lastTime=0,acc=0,shake=0,soundOn=true,audio=null;
@@ -140,6 +140,7 @@ soundIcon();$('sound').onclick=()=>{soundOn=!soundOn;soundIcon();try{localStorag
 function updateHUD(){$('score').textContent=String(score).padStart(4,'0');$('level').textContent=String(level).padStart(2,'0');$('lives').textContent=lives;document.querySelector('.heart').textContent=Array.from({length:3},(_,i)=>i<lives?'●':'○').join(' ');if(score>best){best=score;try{localStorage.setItem('bb-best',best)}catch(e){}}}
 
 /* ---------- Pre-rendered sprites & background (big speed win: no per-frame gradients/dots) ---------- */
+function shade(hex,t){const n=parseInt(hex.slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;const m=t<0?0:255,k=Math.abs(t);r=Math.round(r+(m-r)*k);g=Math.round(g+(m-g)*k);b=Math.round(b+(m-b)*k);return 'rgb('+r+','+g+','+b+')'}
 const bubbleImg=new Image();let imgReady=false;
 bubbleImg.onload=()=>{imgReady=true;if(bg)buildSprites()};bubbleImg.src='bubble.webp';
 function buildSprites(){
@@ -147,13 +148,17 @@ function buildSprites(){
   for(const c of COLORS){
     const s=document.createElement('canvas');s.width=s.height=Math.ceil(size*ss);
     const x=s.getContext('2d');x.scale(ss,ss);
-    if(imgReady){                          // crystal PNG/WebP, tinted once per colour (never per frame)
-      const d=BR*2+2,o=(size-d)/2;
-      x.drawImage(bubbleImg,o,o,d,d);
-      x.globalCompositeOperation='source-atop';x.globalAlpha=.9;x.fillStyle=c;x.fillRect(0,0,size,size);   // colour the glass
-      x.globalAlpha=.38;x.globalCompositeOperation='source-over';x.drawImage(bubbleImg,o,o,d,d);          // bring back highlights & rim
-      x.globalAlpha=1;
-    }else{                                 // fallback while image loads / if missing
+    if(imgReady){                          // solid deep-colour ball underneath + crystal glass (highlights, rim) on top
+      const d=BR*2+2,o=(size-d)/2,cx=size/2,cy=size/2,R=d/2-.4;
+      const g=x.createRadialGradient(cx-R*.35,cy-R*.4,R*.05,cx,cy,R);
+      g.addColorStop(0,shade(c,.22));g.addColorStop(.55,c);g.addColorStop(1,shade(c,-.45));
+      x.fillStyle=g;x.beginPath();x.arc(cx,cy,R,0,Math.PI*2);x.fill();
+      x.globalAlpha=.3;x.drawImage(bubbleImg,o,o,d,d);x.globalAlpha=1;
+      x.strokeStyle=shade(c,-.5);x.lineWidth=.9;x.beginPath();x.arc(cx,cy,R-.3,0,Math.PI*2);x.stroke();
+      x.strokeStyle='rgba(255,255,255,.38)';x.lineWidth=1;x.beginPath();x.arc(cx,cy,R-1.6,0,Math.PI*2);x.stroke();            // inner glass rim
+      x.fillStyle='rgba(255,255,255,.85)';x.beginPath();x.ellipse(cx-R*.36,cy-R*.46,R*.3,R*.15,-.7,0,Math.PI*2);x.fill();      // main highlight
+      x.fillStyle='rgba(255,255,255,.4)';x.beginPath();x.ellipse(cx+R*.4,cy+R*.5,R*.16,R*.07,-.7,0,Math.PI*2);x.fill();        // small reflection
+        }else{                                 // fallback while image loads / if missing
       const g=x.createRadialGradient(size/2-BR*.3,size/2-BR*.4,0,size/2,size/2,BR);
       g.addColorStop(0,c);g.addColorStop(1,c+'88');
       x.fillStyle=g;x.beginPath();x.arc(size/2,size/2,BR,0,Math.PI*2);x.fill();
