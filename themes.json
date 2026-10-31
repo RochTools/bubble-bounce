@@ -1,7 +1,7 @@
 [
   {
     "name": "My Stars",
-    "minScore": 30,
+    "minScore": 200,
     "background": "backgrounds/night.webp",
     "veil": 0.1,
     "pieces": [
@@ -36,7 +36,7 @@
   },
   {
     "name": "Sunset Hills",
-    "minScore": 700,
+    "minScore": 300,
     "background": "backgrounds/sunset.webp",
     "piece": "pieces/crystal.webp",
     "tint": true,
@@ -51,7 +51,7 @@
   },
   {
     "name": "Starry Night",
-    "minScore": 1600,
+    "minScore": 500,
     "background": "backgrounds/night.webp",
     "piece": "pieces/crystal.webp",
     "tint": true,
@@ -66,7 +66,7 @@
   },
   {
     "name": "Shape Party",
-    "minScore": 2600,
+    "minScore": 700,
     "background": "backgrounds/sunset.webp",
     "veil": 0.2,
     "pieces": [
