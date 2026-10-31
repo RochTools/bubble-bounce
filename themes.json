@@ -21,6 +21,31 @@
     "label": "NEW",
     "labelColor": "#ff5c7a"
   },
+  
+  {
+    "name": "forest",
+    "minScore": 100,
+    "cost": 400,
+    "background": "backgrounds/forest.webp",
+    "veil": 0.1,
+    "pieces": [
+      {
+        "Peace": "pieces/crystal.webp",
+      
+        "tint": true
+      }
+    ],
+    "colors": [
+      "#38b6ff",
+      "#2ee6a6",
+      "#d96bff",
+      "#ffd23f",
+      "#ff7a8a"
+    ],
+    "label": "NEW",
+    "labelColor": "#ff5c7a"
+  },
+  
   {
     "name": "Sunset Hills",
     "minScore": 200,
