@@ -6,8 +6,8 @@
     "veil": 0.1,
     "pieces": [
       {
-        "image": "pieces/star.webp",
-        "shape": "star",
+        "Peace": "pieces/crystal.webp",
+      
         "tint": true
       }
     ],
@@ -22,23 +22,9 @@
     "labelColor": "#ff5c7a"
   },
   {
-    "name": "Forest Lake",
-    "minScore": 0,
-    "background": "backgrounds/forest.webp",
-    "piece": "pieces/crystal.webp",
-    "tint": true,
-    "veil": 0.5,
-    "colors": [
-      "#2f7cf6",
-      "#1fbf6b",
-      "#ec3b52",
-      "#f5a60b",
-      "#8b5cf6"
-    ]
-  },
-  {
     "name": "Sunset Hills",
-    "minScore": 700,
+    "minScore": 200,
+    "cost": 500,
     "background": "backgrounds/sunset.webp",
     "piece": "pieces/crystal.webp",
     "tint": true,
@@ -51,24 +37,76 @@
       "#7c5cff"
     ]
   },
+
   {
-    "name": "Starry Night",
-    "minScore": 1600,
+    "name": "sattary nigth",
+    "minScore": 300,
+    "cost": 1000,
     "background": "backgrounds/night.webp",
-    "piece": "pieces/crystal.webp",
-    "tint": true,
-    "veil": 0.1,
+    "veil": 0.2,
+    "pieces": [
+      {
+        "image": "pieces/crystal.webp",
+        "shape": "circle",
+        "tint": true
+      },
+      
+      {
+        "shape": "square"
+      }
+    ],
+    "mix": "checker",
     "colors": [
-      "#38b6ff",
+      "#ff5d73",
+      "#ffb020",
       "#2ee6a6",
-      "#d96bff",
-      "#ffd23f",
-      "#ff7a8a"
-    ]
+      "#38b6ff",
+      "#a77bff"
+      
+      
+    ],
+    "label": "HOT",
+    "labelColor": "#f59e0b"
+  },
+
+
+  {
+    "name": "dewar",
+    "minScore": 400,
+    "cost": 1500,
+    "background": "backgrounds/dewar.webp",
+    "veil": 0.2,
+    "pieces": [
+      {
+        "image": "pieces/crystal.webp",
+        "shape": "circle",
+        "tint": true
+      },
+      
+      {
+        "shape": "square"
+      },
+      {
+        "shape": "hexagon"
+      }
+    ],
+    "mix": "checker",
+ "colors": [
+      "#ff5d73",
+      "#ffb020",
+      "#2ee6a6",
+      "#38b6ff",
+      "#a77bff"
+
+
+    ],
+    "label": "HOT",
+    "labelColor": "#f59e0b"
   },
   {
     "name": "Shape Party",
-    "minScore": 2600,
+    "minScore": 500,
+    "cost": 2000,
     "background": "backgrounds/sunset.webp",
     "veil": 0.2,
     "pieces": [
@@ -77,6 +115,8 @@
         "shape": "circle",
         "tint": true
       },
+      
+      
       {
         "shape": "star"
       },
@@ -97,5 +137,17 @@
     ],
     "label": "HOT",
     "labelColor": "#f59e0b"
-  }
+  },
+  
+  {
+  "name": "jungle",
+  "minScore": 600,
+"cost": 2500,
+  "label": "NEW",
+  "labelColor": "#ff5c7a",
+  "background": "backgrounds/jungle.webp",
+  "veil": 0.2,
+  "pieces": [ { "shape": "circle" } ],
+  "colors": ["#2f7cf6", "#1fbf6b", "#ec3b52", "#f5a60b", "#8b5cf6"]
+}
 ]
