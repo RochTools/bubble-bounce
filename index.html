@@ -34,13 +34,15 @@ button:disabled{opacity:.4;cursor:default}
 
 .layout{flex:1;min-height:0;display:flex;margin-bottom:14px}
 .game-card{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;border:1px solid #ffffff12;background:#0e1428;border-radius:18px;overflow:hidden}
-.hud{flex:none;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;gap:10px;border-bottom:1px solid #ffffff0c}
+.hud{flex:none;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;gap:10px;background:linear-gradient(180deg,#3d97ff,#2679ec);box-shadow:0 2px 10px rgba(20,70,160,.35);position:relative;z-index:3}
 .stats{display:flex;gap:22px}
-.label{font-size:9px;letter-spacing:1.6px;font-weight:700;color:var(--muted);margin-bottom:2px}
+.label{font-size:9px;letter-spacing:1.6px;font-weight:700;color:rgba(235,246,255,.82);margin-bottom:2px}
 .value{font-size:21px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.8px;line-height:1.1}
-.value.mint{color:var(--mint)}
+.value{color:#fff}
+.value.mint{color:#fff}
+#lives{color:#ffe3ea!important}
 .hud-controls{display:flex;gap:8px}
-.icon-btn{border:1px solid #ffffff14;background:#ffffff07;color:#cdd5eb;width:44px;height:44px;border-radius:13px;display:grid;place-items:center}
+.icon-btn{border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.18);color:#fff;width:44px;height:44px;border-radius:13px;display:grid;place-items:center}
 .icon-btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 
 .stage{position:relative;flex:1;min-height:0;display:flex;justify-content:center;align-items:flex-end;background:radial-gradient(ellipse at 50% 22%,#1d2650,#0b1123 72%);touch-action:none;overflow:hidden}
@@ -131,7 +133,7 @@ canvas{display:block;touch-action:none;flex:none;position:relative;z-index:1}
 <script>
 'use strict';
 const $=id=>document.getElementById(id),canvas=$('game'),stage=$('stage');
-const ctx=canvas.getContext('2d',{desynchronized:true});
+const ctx=canvas.getContext('2d');   // NOTE: no {desynchronized:true} - on many Android phones it paints the transparent canvas BLACK over the background
 
 /* ---------- World: fixed logical width, so objects are always big enough to see and touch ---------- */
 const VW=360;                       // logical width (px). Height follows the screen, capped below.
