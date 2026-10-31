@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#0b1025">
+<meta name="theme-color" content="#3d97ff">
 <meta name="description" content="Pop the bubbles. Catch the bounce. A fast, offline-ready arcade game.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -19,7 +19,7 @@ html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;backgrou
   font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 body{height:100vh;height:100dvh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
-  background:radial-gradient(ellipse at 15% 0%,#1a2348 0,transparent 48%),radial-gradient(ellipse at 95% 95%,#142e34 0,transparent 40%),#080c1c}
+  background:linear-gradient(#3d97ff,#3d97ff) top/100% env(safe-area-inset-top) no-repeat,radial-gradient(ellipse at 15% 0%,#1a2348 0,transparent 48%),radial-gradient(ellipse at 95% 95%,#142e34 0,transparent 40%),#080c1c}
 button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 button:focus-visible{outline:3px solid #b9a2ff;outline-offset:4px}
 button:disabled{opacity:.4;cursor:default}
@@ -82,7 +82,7 @@ canvas{display:block;touch-action:none;flex:none;position:relative;z-index:1}
 .game-foot{flex:none;padding:9px 18px;display:flex;justify-content:space-between;color:#74829f;font-size:10px;border-top:1px solid #ffffff09}
 .heart{color:#f5a4bc;letter-spacing:4px}
 
-.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 150px);transform:translateX(-50%);pointer-events:none;box-shadow:0 10px 30px rgba(20,70,140,.35);padding:13px 19px;border-radius:14px;border:1.5px solid #2f8cff55;background:#fff;color:#12305a;font-weight:650;z-index:10;max-width:90vw;font-size:12px;text-align:center}
+.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 150px);transform:translateX(-50%);pointer-events:none;box-shadow:0 10px 30px rgba(20,70,140,.35);padding:13px 19px;border-radius:14px;border:1.5px solid #2f8cff55;background:#fff;color:#12305a;font-weight:650;z-index:30;max-width:90vw;font-size:12px;text-align:center}
 .dialog{position:fixed;inset:0;background:rgba(160,205,245,.9);z-index:20;display:grid;place-items:center;padding:20px}
 .dialog-box{--ink:#12305a;max-width:380px;width:100%;background:linear-gradient(165deg,#ffffff,#eaf5ff);border:1.5px solid #2f8cff66;border-radius:26px;padding:26px;box-shadow:0 0 0 6px #2f8cff14,0 22px 50px rgba(30,90,160,.3)}
 .dialog h2{font-size:24px;margin:2px 0 10px}
@@ -96,6 +96,16 @@ canvas{display:block;touch-action:none;flex:none;position:relative;z-index:1}
 .theme-card .thumb{display:block;height:74px;background-size:cover;background-position:center bottom;background-color:#cfe6ff}
 .theme-card .nm{display:block;padding:8px 10px 9px;font-size:12px;font-weight:700}
 .theme-card small{display:block;font-weight:500;font-size:10px;color:#6b86ab;margin-top:2px}
+.coin-dot,.value.coin:before{content:"";display:inline-block;width:1.2em;height:1.2em;margin-right:7px;vertical-align:-.28em;
+  background:url(coin.webp) center/contain no-repeat,radial-gradient(circle at 35% 30%,#fff3b0,#ffc83d 55%,#e09b00);border-radius:50%;filter:drop-shadow(0 1px 2px rgba(0,50,120,.45))}
+.coin-dot{width:22px;height:22px;margin-right:6px;vertical-align:middle}
+.theme-h{display:flex;justify-content:space-between;align-items:center}
+.menu-bank{display:inline-flex;align-items:center;font-size:14px;letter-spacing:0;color:#12305a;font-weight:800}
+.theme-card.locked .thumb{filter:grayscale(.9) brightness(.7)}
+.theme-card .price{color:#b07400;font-weight:700}
+.theme-card.armed{border-color:#f5a60b;box-shadow:0 0 0 3px #f5a60b44}
+.theme-card .badge{position:absolute;top:6px;left:6px;max-width:60%;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.6px;color:#fff;background:var(--bc,#ff5c7a);box-shadow:0 2px 6px #0004;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.theme-card .lock{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.93);display:grid;place-items:center;font-size:13px;box-shadow:0 2px 6px #0003}
 .theme-card.sel{border-color:#2f8cff;box-shadow:0 0 0 3px #2f8cff33}
 .theme-card.sel:after{content:"✓";position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:#2f8cff;color:#fff;font-size:13px;font-weight:800;display:grid;place-items:center}
 .row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border:2px solid #cfe3f7;border-radius:16px;padding:11px 14px;font-weight:700;font-size:14px;color:var(--ink)}
@@ -118,7 +128,7 @@ canvas{display:block;touch-action:none;flex:none;position:relative;z-index:1}
 <div class="shell">
 <header class="top"><div class="brand"><span class="brand-mark" aria-hidden="true"></span>bubble bounce<span style="color:#8bf6ca">.</span></div></header>
 <main class="layout"><section class="game-card" aria-label="Bubble Bounce game">
-<div class="hud"><div class="stats"><div><div class="label">SCORE</div><div class="value mint" id="score">0000</div></div><div><div class="label">LEVEL</div><div class="value" id="level">01</div></div><div><div class="label">LIVES</div><div class="value" style="color:#f5a4bc" id="lives">3</div></div></div>
+<div class="hud"><div class="stats"><div><div class="label">SCORE</div><div class="value mint" id="score">0000</div></div><div><div class="label">BANK</div><div class="value coin" id="coins">0</div></div><div><div class="label">LIVES</div><div class="value" style="color:#f5a4bc" id="lives">3</div></div></div>
 <div class="hud-controls"><button class="icon-btn" id="pause" aria-label="Pause game" disabled><svg viewBox="0 0 24 24"><path d="M9 5v14M15 5v14"/></svg></button><button class="icon-btn" id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></div>
 <div class="stage" id="stage"><div class="bg-layer" id="bgA"></div><div class="bg-layer" id="bgB"></div><div class="veil" id="veil"></div><canvas id="game" aria-label="Drag your finger anywhere to move the paddle. Arrow keys also work."></canvas>
 <div class="overlay" id="overlay"><div class="modal"><div class="orb" id="modalIcon">✧</div><div class="eyebrow" id="modalEyebrow">YOUR NEXT LITTLE OBSESSION</div><h2 id="modalTitle">Ready to bounce?</h2><p id="modalText">Slide the paddle. Catch the ball.<br>Turn every bubble into a little victory.</p><button class="primary" id="play">Let's play &nbsp; →</button><button class="ghost" id="installButton">↓ &nbsp; Install App</button><p class="hint" id="modalHint">DRAG ANYWHERE TO MOVE · TAP TO LAUNCH</p></div><canvas id="confetti"></canvas></div></div>
@@ -126,7 +136,7 @@ canvas{display:block;touch-action:none;flex:none;position:relative;z-index:1}
 </section></main></div>
 <div class="toast" id="toast" role="status" hidden></div>
 <div class="dialog" id="menuDialog" role="dialog" aria-modal="true" aria-labelledby="menuTitle" hidden><div class="dialog-box menu-box"><div class="eyebrow">SETTINGS</div><h2 id="menuTitle">Menu</h2>
-<div class="sheet-sec"><div class="sheet-h">THEME</div><div class="themes" id="themeList"></div></div>
+<div class="sheet-sec"><div class="sheet-h theme-h"><span>THEME</span><span class="menu-bank"><i class="coin-dot"></i><b id="menuCoins">0</b></span></div><div class="themes" id="themeList"></div></div>
 <div class="sheet-sec"><div class="sheet-h">SOUND</div><div class="row"><span id="soundLabel">Sound on</span><button class="switch" id="soundSwitch" type="button" role="switch" aria-checked="true" aria-label="Sound"></button></div></div>
 <button class="primary" id="closeMenu" type="button">Back to game</button></div></div>
 <div class="dialog" id="installHelp" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden><div class="dialog-box"><div class="eyebrow">TAKE THE FUN WITH YOU</div><h2 id="helpTitle">Install Bubble Bounce</h2><p id="helpText"></p><p>Once installed, open the game from your home screen to play in full screen, even offline after the first successful load.</p><button class="primary" id="closeHelp">Got it</button></div></div>
@@ -143,12 +153,13 @@ const BR=12;                        // bubble radius (12 bubbles per row)
 const DEFAULT_COLORS=['#2f7cf6','#1fbf6b','#ec3b52','#f5a60b','#8b5cf6'];
 let COLORS=DEFAULT_COLORS;
 
-let W=VW,H=600,scale=1,dpr=1,state='menu',score=0,level=1,lives=3,best=0,combo=0;
-let balls=[],particles=[],rings=[],keys={},lastTime=0,acc=0,shake=0,soundOn=true,audio=null;
+let W=VW,H=600,scale=1,dpr=1,state='menu',score=0,level=1,lives=3,best=0,combo=0,coins=0,unlocked=[];
+let balls=[],particles=[],rings=[],floats=[],keys={},lastTime=0,acc=0,shake=0,soundOn=true,audio=null;
 let sprites=[],baseSpeed=500,dprCap=2,spritesReady=false;
 const paddle={x:VW/2,target:VW/2,y:540,w:92,h:14};
 const ball={x:VW/2,y:520,vx:0,vy:0,r:8,trail:[]};
 try{best=Number(localStorage.getItem('bb-best'))||0;soundOn=localStorage.getItem('bb-sound')!=='false'}catch(e){}
+try{coins=Math.max(0,Number(localStorage.getItem('bb-coins'))||0);unlocked=JSON.parse(localStorage.getItem('bb-unlocked')||'[]');if(!Array.isArray(unlocked))unlocked=[]}catch(e){unlocked=[]}
 
 /* ---------- UI helpers ---------- */
 function toast(msg){const t=$('toast');t.textContent=msg;t.hidden=false;clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.hidden=true,2600)}
@@ -172,29 +183,35 @@ function sfx(name,rate=1,vol=1){
 function syncSoundUI(){$('soundSwitch').setAttribute('aria-checked',soundOn);$('soundLabel').textContent=soundOn?'Sound on':'Sound off'}
 function setSound(v){soundOn=v;syncSoundUI();try{localStorage.setItem('bb-sound',soundOn)}catch(e){}if(soundOn){loadSounds();sfx('launch')}}
 syncSoundUI();$('soundSwitch').onclick=()=>setSound(!soundOn);
-const hudEl={score:$('score'),level:$('level'),lives:$('lives'),heart:document.querySelector('.heart')},hudLast={score:-1,level:-1,lives:-1};
+const hudEl={score:$('score'),coins:$('coins'),menuCoins:$('menuCoins'),lives:$('lives'),heart:document.querySelector('.heart')},hudLast={score:-1,coins:-1,lives:-1};
+const coinImg=new Image();coinImg.src='coin.webp';
 let hudDirty=false;
-function saveBest(){try{localStorage.setItem('bb-best',best)}catch(e){}}      // disk write: only at calm moments, never mid-rally
+function fmt(n){      // 9999 stays 9999, then 12.5K, 3.4M, 1.2B, 5T ...
+  if(n<1e4)return String(n);
+  const u=[[1e12,'T'],[1e9,'B'],[1e6,'M'],[1e3,'K']];
+  for(const[v,l]of u)if(n>=v){const x=Math.floor(n/v*10)/10;return(x%1?x.toFixed(1):x)+l}
+  return String(n);
+}
+function saveBest(){try{localStorage.setItem('bb-best',best);localStorage.setItem('bb-coins',coins)}catch(e){}}      // disk write: only at calm moments, never mid-rally
 function updateHUD(){
   if(score!==hudLast.score){hudLast.score=score;hudEl.score.textContent=String(score).padStart(4,'0')}
-  if(level!==hudLast.level){hudLast.level=level;hudEl.level.textContent=String(level).padStart(2,'0')}
+  if(coins!==hudLast.coins){hudLast.coins=coins;hudEl.coins.textContent=fmt(coins);hudEl.menuCoins.textContent=fmt(coins)}
   if(lives!==hudLast.lives){hudLast.lives=lives;hudEl.lives.textContent=lives;hudEl.heart.textContent=Array.from({length:3},(_,i)=>i<lives?'●':'○').join(' ')}
   if(score>best)best=score;
-  checkTheme();
 }
 
 /* ---------- Pre-rendered sprites & background (big speed win: no per-frame gradients/dots) ---------- */
 function shade(hex,t){const n=parseInt(hex.slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;const m=t<0?0:255,k=Math.abs(t);r=Math.round(r+(m-r)*k);g=Math.round(g+(m-g)*k);b=Math.round(b+(m-b)*k);return 'rgb('+r+','+g+','+b+')'}
 /* ---------- THEMES: backgrounds/ + pieces/ folders, switched by score (see themes.json) ---------- */
 const DEFAULT_THEMES=[{name:'Forest Lake',minScore:0,background:'backgrounds/forest.webp',piece:'pieces/crystal.webp',tint:true,veil:.5,colors:DEFAULT_COLORS}];
-let THEMES=DEFAULT_THEMES,themeIdx=0,pendingTheme=0,curBgImg=null,curPieces=[{img:null,shape:'circle',tint:true}],themeMode='auto';   // themeMode: 'auto' (by score) or a theme name chosen by the player
-try{themeMode=localStorage.getItem('bb-theme')||'auto'}catch(e){}
+let THEMES=DEFAULT_THEMES,themeIdx=0,pendingTheme=0,curBgImg=null,curPieces=[{img:null,shape:'circle',tint:true}],themeMode='';   // name of the world the player picked
+try{themeMode=localStorage.getItem('bb-theme')||''}catch(e){}
 const FADE_MS=900,imgCache={};
 function loadImg(src){if(!src)return Promise.resolve(null);return imgCache[src]||(imgCache[src]=new Promise(res=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src}))}
 async function loadThemes(){
-  try{const r=await fetch('themes.json',{cache:'no-cache'});if(r.ok){const t=await r.json();if(Array.isArray(t)&&t.length){THEMES=t.filter(x=>x&&typeof x.minScore==='number').sort((a,b)=>a.minScore-b.minScore);THEMES[0].minScore=0}}}catch(e){}
+  try{const r=await fetch('themes.json',{cache:'no-cache'});if(r.ok){const t=await r.json();if(Array.isArray(t)&&t.length){THEMES=t.filter(x=>x&&x.name).sort((a,b)=>(typeof a.minScore==='number'?a.minScore:1e9)-(typeof b.minScore==='number'?b.minScore:1e9));THEMES[0].minScore=0}}}catch(e){}
   if(!THEMES.length)THEMES=DEFAULT_THEMES;
-  if(themeMode!=='auto'&&!THEMES.some(t=>t.name===themeMode))themeMode='auto';
+  unlocked=unlocked.filter(n=>THEMES.some(t=>t.name===n));if(!THEMES.some(t=>t.name===themeMode))themeMode=THEMES[0].name;
 }
 const SHAPES=['circle','square','diamond','star','hexagon','heart'];
 function normPieces(T){          // theme.pieces = list of {image, shape, tint}; old style theme.piece + theme.tint still works
@@ -225,26 +242,35 @@ async function setTheme(i,fade=true){
   const n=THEMES[i+1];if(n){loadImg(n.background);normPieces(n).forEach(p=>loadImg(p.image))}   // preload the next world
   return true;
 }
-function themeFor(sc){let k=0;for(let i=0;i<THEMES.length;i++)if(sc>=THEMES[i].minScore)k=i;return k}
-function modeIndex(){if(themeMode==='auto')return themeFor(score);const i=THEMES.findIndex(t=>t.name===themeMode);return i<0?themeFor(score):i}
-function checkTheme(){
-  if(THEMES.length<2)return;const k=modeIndex();
-  if(k!==themeIdx&&k!==pendingTheme)setTheme(k).then(ok=>{if(ok&&k>0&&themeMode==='auto')toast('✨ New world: '+THEMES[k].name)});
+function isUnlocked(i){return i===0||unlocked.includes(THEMES[i].name)}
+function costOf(i){const c=THEMES[i].cost;return typeof c==='number'?c:500*i}      // first world free, then 500, 1000, 1500 ...
+function modeIndex(){const i=THEMES.findIndex(t=>t.name===themeMode);return i>=0&&isUnlocked(i)?i:0}
+function persistWallet(){try{localStorage.setItem('bb-coins',coins);localStorage.setItem('bb-unlocked',JSON.stringify(unlocked))}catch(e){}}
+function chooseTheme(i){if(!isUnlocked(i))return;themeMode=THEMES[i].name;try{localStorage.setItem('bb-theme',themeMode)}catch(e){}renderThemeList();setTheme(i)}
+function buyTheme(i){
+  const c=costOf(i);if(coins<c){toast('Need '+fmt(c-coins)+' more coins');return}
+  coins-=c;unlocked.push(THEMES[i].name);persistWallet();updateHUD();sfx('win');toast('Unlocked: '+THEMES[i].name+' ✨');chooseTheme(i);
 }
-function chooseTheme(mode){
-  themeMode=mode;try{localStorage.setItem('bb-theme',mode)}catch(e){}
-  renderThemeList();const k=modeIndex();if(k!==themeIdx)setTheme(k);
-}
+let armed=-1,armTimer=0;
 function renderThemeList(){
   const box=$('themeList');box.innerHTML='';
-  const card=(mode,name,sub,thumb)=>{
-    const b=document.createElement('button');b.type='button';b.className='theme-card'+(themeMode===mode?' sel':'');
-    const t=document.createElement('span');t.className='thumb';thumb(t);
-    const n=document.createElement('span');n.className='nm';n.textContent=name;const sm=document.createElement('small');sm.textContent=sub;n.appendChild(sm);
-    b.append(t,n);b.onclick=()=>chooseTheme(mode);box.appendChild(b);
-  };
-  card('auto','Auto','Changes with your score',t=>{t.style.backgroundImage='linear-gradient(135deg,#2f7cf6,#e754b4 55%,#0b1030)'});
-  THEMES.forEach(th=>card(th.name,th.name,th.minScore?'from '+th.minScore+' pts':'first world',t=>{if(th.background)t.style.backgroundImage='url("'+encodeURI(th.background)+'")'}));
+  THEMES.forEach((th,i)=>{
+    const open=isUnlocked(i),b=document.createElement('button');b.type='button';
+    b.className='theme-card'+(open&&themeMode===th.name?' sel':'')+(open?'':' locked'+(armed===i?' armed':''));
+    const t=document.createElement('span');t.className='thumb';if(th.background)t.style.backgroundImage='url("'+encodeURI(th.background)+'")';
+    const n=document.createElement('span');n.className='nm';n.textContent=th.name;const sm=document.createElement('small');
+    if(open)sm.textContent=i===0?'free':'unlocked';else{sm.className='price';sm.textContent=armed===i?'Tap again to buy':fmt(costOf(i))+' coins'}
+    n.appendChild(sm);b.append(t,n);
+    if(!open){const lk=document.createElement('span');lk.className='lock';lk.textContent='🔒';b.appendChild(lk)}
+    if(th.label){const bd=document.createElement('span');bd.className='badge';bd.textContent=th.label;if(th.labelColor)bd.style.setProperty('--bc',th.labelColor);b.appendChild(bd)}
+    b.onclick=()=>{
+      if(open){chooseTheme(i);return}
+      if(armed===i){armed=-1;clearTimeout(armTimer);buyTheme(i);renderThemeList()}                  // second tap = buy
+      else{armed=i;clearTimeout(armTimer);armTimer=setTimeout(()=>{armed=-1;renderThemeList()},3000);renderThemeList()}
+    };
+    box.appendChild(b);
+  });
+  $('menuCoins').textContent=fmt(coins);
 }
 
 /* ---------- Pre-rendered sprites & background (big speed win: no per-frame gradients) ---------- */
@@ -313,7 +339,7 @@ function overlay(title,text,button,tag='TAKE A BREATH',icon='✧',hint='DRAG ANY
   $('modalTitle').textContent=title;$('modalText').textContent=text;$('play').textContent=button;$('modalEyebrow').textContent=tag;$('modalIcon').textContent=icon;$('modalHint').textContent=hint;
   $('overlay').dataset.kind=state;if(state==='level')setTimeout(confettiStart,30);$('overlay').hidden=false;$('pause').disabled=true;installVisibility(showInstall)
 }
-function startGame(){score=0;level=1;lives=3;particles=[];rings=[];combo=0;paddle.x=paddle.target=W/2;makeBubbles();resetBall();updateHUD();ready()}
+function startGame(){score=0;level=1;lives=3;particles=[];rings=[];floats=[];combo=0;paddle.x=paddle.target=W/2;makeBubbles();resetBall();updateHUD();ready()}
 function ready(){state='ready';$('overlay').hidden=true;$('pause').disabled=false;$('status').textContent='Tap the play area to launch';resetBall()}
 function setSpeed(s){const v=Math.hypot(ball.vx,ball.vy)||1;ball.vx*=s/v;ball.vy*=s/v}
 function keepSteep(){            // avoid nearly-horizontal, boring rallies
@@ -350,7 +376,7 @@ function launch(){if(state!=='ready')return;state='playing';baseSpeed=levelSpeed
 function pauseGame(){saveBest();if(state!=='playing'&&state!=='ready')return;pauseGame.previous=state;state='paused';overlay('A little breather.','Your next great bounce can wait.','Resume play →','PAUSED','Ⅱ','TAP RESUME TO CONTINUE')}
 function resume(){state=pauseGame.previous||'ready';$('overlay').hidden=true;$('pause').disabled=false;lastTime=0;acc=0}
 $('pause').onclick=pauseGame;
-function openMenu(){if(state==='playing'||state==='ready')pauseGame();syncSoundUI();$('menuDialog').hidden=false;$('closeMenu').focus()}
+function openMenu(){if(state==='playing'||state==='ready')pauseGame();syncSoundUI();renderThemeList();$('menuDialog').hidden=false;$('closeMenu').focus()}
 function closeMenu(){$('menuDialog').hidden=true}
 $('menuBtn').onclick=openMenu;$('closeMenu').onclick=closeMenu;$('menuDialog').onclick=e=>{if(e.target===$('menuDialog'))closeMenu()};
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('menuDialog').hidden)closeMenu()});
@@ -385,7 +411,9 @@ function update(dt){
         b.alive=false;alive--;const dist=Math.sqrt(d2),nx=dist?dx/dist:0,ny=dist?dy/dist:1,dot=ball.vx*nx+ball.vy*ny;
         if(dot<0){ball.vx-=2*dot*nx;ball.vy-=2*dot*ny;keepSteep()}
         ball.x=b.x+nx*(rr+.2);ball.y=b.y+ny*(rr+.2);
-        score+=10;combo++;burst(b.x,b.y,COLORS[b.ci%COLORS.length]);sfx('pop',1+Math.min(combo,14)*.05);hudDirty=true;
+        score+=10;combo++;const gain=5*(1<<Math.min(combo-1,5));coins+=gain;      // 1st bubble of a shot = 5, 2nd = 10, 3rd = 20 ... (resets when the ball touches the paddle)
+        if(floats.length>10)floats.shift();floats.push({x:b.x,y:b.y,n:gain,life:.9});
+        burst(b.x,b.y,COLORS[b.ci%COLORS.length]);sfx('pop',1+Math.min(combo,14)*.05);hudDirty=true;
         if(alive<=0)finishLevel();
         break;
       }
@@ -396,6 +424,7 @@ function update(dt){
   for(const p of particles){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=120*dt}
   {let w=0;for(let i=0;i<particles.length;i++){const p=particles[i];if(p.life>0)particles[w++]=p}particles.length=w}
   {let w=0;for(let i=0;i<rings.length;i++){const r=rings[i];r.life-=dt;r.r+=100*dt;if(r.life>0)rings[w++]=r}rings.length=w}
+  {let w=0;for(let i=0;i<floats.length;i++){const f=floats[i];f.life-=dt;f.y-=46*dt;if(f.life>0)floats[w++]=f}floats.length=w}
   shake=Math.max(0,shake-dt*28);
 }
 
@@ -409,6 +438,11 @@ function draw(){
   for(const r of rings){ctx.globalAlpha=r.life/.28;ctx.strokeStyle=r.color;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,6.2832);ctx.stroke()}
   for(const p of particles){ctx.globalAlpha=Math.min(1,p.life/.25);ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.2832);ctx.fill()}
   ctx.globalAlpha=1;
+  if(floats.length){ctx.textAlign='center';ctx.lineJoin='round';ctx.lineWidth=3;
+    for(const f of floats){ctx.globalAlpha=Math.min(1,f.life/.35);ctx.font='800 '+(12+Math.log2(f.n/5)*2.2)+'px system-ui,sans-serif';ctx.strokeStyle='rgba(60,35,0,.75)';const tx='+'+f.n,sz2=14+Math.log2(f.n/5)*2,hasC=coinImg.complete&&coinImg.naturalWidth,tw=ctx.measureText(tx).width,off=hasC?(sz2+3)/2:0;
+      ctx.strokeText(tx,f.x+off,f.y);ctx.fillStyle=f.n>5?'#ffe27a':'#fff4c2';ctx.fillText(tx,f.x+off,f.y);
+      if(hasC)ctx.drawImage(coinImg,f.x+off-tw/2-sz2-3,f.y-sz2*.82,sz2,sz2)}
+    ctx.globalAlpha=1}
   const n=ball.trail.length/2;
   for(let i=n-1;i>0;i--){ctx.fillStyle='rgba(204,192,255,'+(.25*(1-i/n))+')';ctx.beginPath();ctx.arc(ball.trail[i*2],ball.trail[i*2+1],ball.r*(1-i/(n+1)),0,6.2832);ctx.fill()}
   ctx.fillStyle='#f7f2ff';ctx.beginPath();ctx.arc(ball.x,ball.y,ball.r,0,6.2832);ctx.fill();
