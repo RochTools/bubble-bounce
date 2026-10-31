@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'bubble-bounce-v12';
+const CACHE = 'bubble-bounce-v13';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', './icon-maskable.png', './themes.json'];
 
 // Pre-cache the core files AND every background/piece listed in themes.json, so all worlds work offline.
