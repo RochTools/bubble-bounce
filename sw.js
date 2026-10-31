@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'bubble-bounce-v8';
+const CACHE = 'bubble-bounce-v11';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', './icon-maskable.png', './themes.json'];
 
 // Pre-cache the core files AND every background/piece listed in themes.json, so all worlds work offline.
@@ -8,7 +8,7 @@ async function precache() {
   await Promise.all(CORE.map(u => cache.add(new Request(u, { cache: 'reload' })).catch(() => {})));
   try {
     const themes = await (await cache.match('./themes.json')).json();
-    const files = [...new Set(themes.flatMap(t => [t.background, t.piece]).filter(Boolean))];
+    const files = [...new Set(themes.flatMap(t => [t.background, t.piece, ...(t.pieces || []).map(p => typeof p === 'string' ? p : p && p.image)]).filter(Boolean))];
     await Promise.all(files.map(f => cache.add(new Request('./' + f, { cache: 'reload' })).catch(() => {})));
   } catch (e) {}
 }

@@ -1,12 +1,38 @@
 [
   {
+    "name": "My Stars",
+    "minScore": 30,
+    "background": "backgrounds/night.webp",
+    "veil": 0.1,
+    "pieces": [
+      {
+        "image": "pieces/star.webp",
+        "shape": "star",
+        "tint": true
+      }
+    ],
+    "colors": [
+      "#38b6ff",
+      "#2ee6a6",
+      "#d96bff",
+      "#ffd23f",
+      "#ff7a8a"
+    ]
+  },
+  {
     "name": "Forest Lake",
     "minScore": 0,
     "background": "backgrounds/forest.webp",
     "piece": "pieces/crystal.webp",
     "tint": true,
     "veil": 0.5,
-    "colors": ["#2f7cf6", "#1fbf6b", "#ec3b52", "#f5a60b", "#8b5cf6"]
+    "colors": [
+      "#2f7cf6",
+      "#1fbf6b",
+      "#ec3b52",
+      "#f5a60b",
+      "#8b5cf6"
+    ]
   },
   {
     "name": "Sunset Hills",
@@ -15,7 +41,13 @@
     "piece": "pieces/crystal.webp",
     "tint": true,
     "veil": 0.2,
-    "colors": ["#ff5d73", "#ff9f1c", "#ffd23f", "#e754b4", "#7c5cff"]
+    "colors": [
+      "#ff5d73",
+      "#ff9f1c",
+      "#ffd23f",
+      "#e754b4",
+      "#7c5cff"
+    ]
   },
   {
     "name": "Starry Night",
@@ -24,6 +56,42 @@
     "piece": "pieces/crystal.webp",
     "tint": true,
     "veil": 0.1,
-    "colors": ["#38b6ff", "#2ee6a6", "#d96bff", "#ffd23f", "#ff7a8a"]
+    "colors": [
+      "#38b6ff",
+      "#2ee6a6",
+      "#d96bff",
+      "#ffd23f",
+      "#ff7a8a"
+    ]
+  },
+  {
+    "name": "Shape Party",
+    "minScore": 2600,
+    "background": "backgrounds/sunset.webp",
+    "veil": 0.2,
+    "pieces": [
+      {
+        "image": "pieces/crystal.webp",
+        "shape": "circle",
+        "tint": true
+      },
+      {
+        "shape": "star"
+      },
+      {
+        "shape": "square"
+      },
+      {
+        "shape": "hexagon"
+      }
+    ],
+    "mix": "checker",
+    "colors": [
+      "#ff5d73",
+      "#ffb020",
+      "#2ee6a6",
+      "#38b6ff",
+      "#a77bff"
+    ]
   }
 ]
