@@ -89,6 +89,22 @@ canvas{display:block;touch-action:none;flex:none;position:relative;z-index:1}
 .dialog p{font-size:13px;line-height:1.8;color:#4b6a93}
 .dialog .primary{margin-top:22px}
 .menu-box{max-height:calc(100dvh - 40px);overflow:auto}
+/* full-screen menu */
+#menuDialog{display:block;padding:0;background:linear-gradient(180deg,#eaf6ff,#bfe1ff);overflow:hidden}
+#menuDialog .menu-box{position:relative;max-width:none;max-height:none;width:100%;height:100%;border:0;border-radius:0;box-shadow:none;background:transparent;overflow:auto;-webkit-overflow-scrolling:touch;
+  padding:calc(env(safe-area-inset-top) + 22px) 18px calc(env(safe-area-inset-bottom) + 22px);display:flex;flex-direction:column;align-items:center}
+#menuDialog .menu-box>*{width:100%;max-width:520px;flex:none}
+#menuDialog .menu-box>.menu-x{position:absolute;top:calc(env(safe-area-inset-top) + 14px);right:14px;width:46px;height:46px;max-width:none}
+#menuDialog .primary{margin-top:22px}
+.menu-x{border:1.5px solid #2f8cff55;background:#fff;color:#2a62c4;border-radius:14px;display:grid;place-items:center;box-shadow:0 4px 12px rgba(30,90,160,.18)}
+.menu-x svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+@media(min-width:560px){.themes{grid-template-columns:repeat(3,1fr)}}
+.important{display:block;width:100%;text-align:center;border:2px solid #f5a60b;background:linear-gradient(180deg,#fff9e6,#ffefc2);border-radius:16px;padding:13px 14px 12px;color:#6b4300;box-shadow:0 4px 14px rgba(245,166,11,.22)}
+.important .imp-h{display:block;font-size:11px;font-weight:800;letter-spacing:2.2px;color:#b06d00;margin-bottom:6px}
+.important .imp-t{display:block;font-size:15px;font-weight:700;line-height:1.9}
+.important:active{transform:scale(.98)}
+.important.wiggle{animation:wiggle .5s ease}
+@keyframes wiggle{0%,100%{transform:none}20%{transform:rotate(-1.6deg)}40%{transform:rotate(1.6deg)}60%{transform:rotate(-1deg)}80%{transform:rotate(.8deg)}}
 .sheet-sec{margin:16px 0 0;text-align:left}
 .sheet-h{font-size:10px;letter-spacing:2.2px;font-weight:750;color:#4b6a93;margin:0 0 10px}
 .themes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -135,9 +151,10 @@ canvas{display:block;touch-action:none;flex:none;position:relative;z-index:1}
 <div class="game-foot"><span id="status">Made for your fingertips</span><span class="heart" aria-hidden="true">● ● ●</span></div>
 </section></main></div>
 <div class="toast" id="toast" role="status" hidden></div>
-<div class="dialog" id="menuDialog" role="dialog" aria-modal="true" aria-labelledby="menuTitle" hidden><div class="dialog-box menu-box"><div class="eyebrow">SETTINGS</div><h2 id="menuTitle">Menu</h2>
+<div class="dialog" id="menuDialog" role="dialog" aria-modal="true" aria-labelledby="menuTitle" hidden><div class="dialog-box menu-box"><button class="menu-x" id="menuX" type="button" aria-label="Close menu"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button><div class="eyebrow">SETTINGS</div><h2 id="menuTitle">Menu</h2>
 <div class="sheet-sec"><div class="sheet-h theme-h"><span>THEME</span><span class="menu-bank"><i class="coin-dot"></i><b id="menuCoins">0</b></span></div><div class="themes" id="themeList"></div></div>
 <div class="sheet-sec"><div class="sheet-h">SOUND</div><div class="row"><span id="soundLabel">Sound on</span><button class="switch" id="soundSwitch" type="button" role="switch" aria-checked="true" aria-label="Sound"></button></div></div>
+<div class="sheet-sec"><button class="important" id="importantBtn" type="button"><span class="imp-h">⚠️ IMPORTANT</span><span class="imp-t" dir="rtl" lang="ur">کیش کلیئر کرنے پر سکے غائب ہو جائیں گے، پھر رونا مت 🤣</span></button></div>
 <button class="primary" id="closeMenu" type="button">Back to game</button></div></div>
 <div class="dialog" id="installHelp" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden><div class="dialog-box"><div class="eyebrow">TAKE THE FUN WITH YOU</div><h2 id="helpTitle">Install Bubble Bounce</h2><p id="helpText"></p><p>Once installed, open the game from your home screen to play in full screen, even offline after the first successful load.</p><button class="primary" id="closeHelp">Got it</button></div></div>
 <script>
@@ -378,7 +395,8 @@ function resume(){state=pauseGame.previous||'ready';$('overlay').hidden=true;$('
 $('pause').onclick=pauseGame;
 function openMenu(){if(state==='playing'||state==='ready')pauseGame();syncSoundUI();renderThemeList();$('menuDialog').hidden=false;$('closeMenu').focus()}
 function closeMenu(){$('menuDialog').hidden=true}
-$('menuBtn').onclick=openMenu;$('closeMenu').onclick=closeMenu;$('menuDialog').onclick=e=>{if(e.target===$('menuDialog'))closeMenu()};
+$('menuBtn').onclick=openMenu;$('closeMenu').onclick=closeMenu;$('menuX').onclick=closeMenu;
+$('importantBtn').onclick=e=>{const b=e.currentTarget;b.classList.remove('wiggle');void b.offsetWidth;b.classList.add('wiggle')};$('menuDialog').onclick=e=>{if(e.target===$('menuDialog'))closeMenu()};
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('menuDialog').hidden)closeMenu()});
 $('play').onclick=()=>{if(soundOn)loadSounds();sfx('launch');if(state==='paused')resume();else if(state==='level'){level++;makeBubbles();updateHUD();ready()}else startGame()};
 
