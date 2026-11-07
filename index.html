@@ -13,7 +13,10 @@
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>Bubble Bounce — Catch the feeling</title>
 <style>
-:root{color-scheme:dark;--bg:#080c1c;--muted:#8993af;--mint:#8bf6ca}
+:root{color-scheme:dark;--bg:#080c1c;--muted:#8993af;--mint:#8bf6ca;--hud-top:10px}
+/* fullscreen / installed app: system bar or camera cut-out can cover the top, so push the HUD down */
+@media(display-mode:fullscreen),(display-mode:standalone){:root{--hud-top:30px}}
+:root:fullscreen,:root.fs{--hud-top:30px}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;background:var(--bg);color:#f4f5ff;
   font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -34,7 +37,7 @@ button:disabled{opacity:.4;cursor:default}
 
 .layout{flex:1;min-height:0;display:flex;margin-bottom:14px}
 .game-card{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;border:1px solid #ffffff12;background:#0e1428;border-radius:18px;overflow:hidden}
-.hud{flex:none;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;gap:10px;background:linear-gradient(180deg,#3d97ff,#2679ec);box-shadow:0 2px 10px rgba(20,70,160,.35);position:relative;z-index:3}
+.hud{flex:none;display:flex;align-items:center;justify-content:space-between;padding:calc(8px + var(--hud-top)) 14px 8px;gap:10px;background:linear-gradient(180deg,#3d97ff,#2679ec);box-shadow:0 2px 10px rgba(20,70,160,.35);position:relative;z-index:3}
 .stats{display:flex;gap:22px}
 .label{font-size:9px;letter-spacing:1.6px;font-weight:700;color:rgba(235,246,255,.82);margin-bottom:2px}
 .value{font-size:21px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.8px;line-height:1.1}
@@ -68,6 +71,8 @@ canvas{display:block;touch-action:none;flex:none;position:relative;z-index:1}
 .modal p{color:#4b6a93;font-size:13px;line-height:1.65;margin:0 auto 20px;max-width:270px}
 .primary{display:block;width:100%;padding:16px 24px;background:var(--acc,#2f8cff);color:#fff;border:0;border-radius:15px;font-weight:800;font-size:15px;box-shadow:0 8px 20px rgba(var(--acc-rgb,47,140,255),.35)}
 .primary:active{filter:brightness(1.08);transform:scale(.98)}
+.revive{background:linear-gradient(180deg,#ffbe2e,#f5a60b);color:#4a2c00;margin-bottom:10px;box-shadow:0 8px 20px rgba(245,166,11,.4);display:flex!important;align-items:center;justify-content:center;gap:2px}
+.revive:disabled{box-shadow:none;filter:grayscale(.5)}
 .ghost{display:block;width:100%;margin-top:10px;padding:13px 20px;border:1px solid rgba(47,140,255,.4);background:#e4f1ff;border-radius:14px;color:#2a62c4;font-weight:650;font-size:13px}
 .hint{font-size:10px!important;letter-spacing:.6px;margin:16px auto 0!important;padding-top:14px;border-top:1px solid #12305a1a;color:#7a93b5!important;max-width:none!important}
 /* win modal: shine sweep, pulsing star, shimmering title (confetti is drawn on #confetti) */
@@ -147,7 +152,7 @@ canvas{display:block;touch-action:none;flex:none;position:relative;z-index:1}
 <div class="hud"><div class="stats"><div><div class="label">SCORE</div><div class="value mint" id="score">0000</div></div><div><div class="label">BANK</div><div class="value coin" id="coins">0</div></div><div><div class="label">LIVES</div><div class="value" style="color:#f5a4bc" id="lives">3</div></div></div>
 <div class="hud-controls"><button class="icon-btn" id="pause" aria-label="Pause game" disabled><svg viewBox="0 0 24 24"><path d="M9 5v14M15 5v14"/></svg></button><button class="icon-btn" id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></div>
 <div class="stage" id="stage"><div class="bg-layer" id="bgA"></div><div class="bg-layer" id="bgB"></div><div class="veil" id="veil"></div><canvas id="game" aria-label="Drag your finger anywhere to move the paddle. Arrow keys also work."></canvas>
-<div class="overlay" id="overlay"><div class="modal"><div class="orb" id="modalIcon">✧</div><div class="eyebrow" id="modalEyebrow">YOUR NEXT LITTLE OBSESSION</div><h2 id="modalTitle">Ready to bounce?</h2><p id="modalText">Slide the paddle. Catch the ball.<br>Turn every bubble into a little victory.</p><button class="primary" id="play">Let's play &nbsp; →</button><button class="ghost" id="installButton">↓ &nbsp; Install App</button><p class="hint" id="modalHint">DRAG ANYWHERE TO MOVE · TAP TO LAUNCH</p></div><canvas id="confetti"></canvas></div></div>
+<div class="overlay" id="overlay"><div class="modal"><div class="orb" id="modalIcon">✧</div><div class="eyebrow" id="modalEyebrow">YOUR NEXT LITTLE OBSESSION</div><h2 id="modalTitle">Ready to bounce?</h2><p id="modalText">Slide the paddle. Catch the ball.<br>Turn every bubble into a little victory.</p><button class="primary revive" id="reviveBtn" hidden><i class="coin-dot"></i><span id="reviveTxt"></span></button><button class="primary" id="play">Let's play &nbsp; →</button><button class="ghost" id="installButton">↓ &nbsp; Install App</button><p class="hint" id="modalHint">DRAG ANYWHERE TO MOVE · TAP TO LAUNCH</p></div><canvas id="confetti"></canvas></div></div>
 <div class="game-foot"><span id="status">Made for your fingertips</span><span class="heart" aria-hidden="true">● ● ●</span></div>
 </section></main></div>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -160,19 +165,22 @@ canvas{display:block;touch-action:none;flex:none;position:relative;z-index:1}
 <script>
 'use strict';
 const $=id=>document.getElementById(id),canvas=$('game'),stage=$('stage');
+function syncFS(){const fs=!!document.fullscreenElement||window.innerHeight>=screen.height-2||matchMedia('(display-mode: fullscreen)').matches;document.documentElement.classList.toggle('fs',fs)}
+syncFS();addEventListener('resize',syncFS);document.addEventListener('fullscreenchange',syncFS);
 const ctx=canvas.getContext('2d');   // NOTE: no {desynchronized:true} - on many Android phones it paints the transparent canvas BLACK over the background
 
 /* ---------- World: fixed logical width, so objects are always big enough to see and touch ---------- */
 const VW=360;                       // logical width (px). Height follows the screen, capped below.
-const MAX_RATIO=1.95;               // never taller than this (height/width) -> no "cricket ground"
+const MAX_RATIO=2.6;               // never taller than this (height/width) -> no "cricket ground"
 const PAD_BOTTOM=104;               // paddle height above the bottom edge (raised so it sits on the stand in the artwork)
+const TOP_PAD=3;                    // gap above the first bubble row
 const BR=12;                        // bubble radius (12 bubbles per row)
 const DEFAULT_COLORS=['#2f7cf6','#1fbf6b','#ec3b52','#f5a60b','#8b5cf6'];
 let COLORS=DEFAULT_COLORS;
 
 let W=VW,H=600,scale=1,dpr=1,state='menu',score=0,level=1,lives=3,best=0,combo=0,coins=0,unlocked=[];
 let balls=[],particles=[],rings=[],floats=[],keys={},lastTime=0,acc=0,shake=0,soundOn=true,audio=null;
-let sprites=[],baseSpeed=500,dprCap=2,spritesReady=false;
+let lowFx=false,sprites=[],baseSpeed=500,dprCap=2,spritesReady=false;
 const paddle={x:VW/2,target:VW/2,y:540,w:92,h:14};
 const ball={x:VW/2,y:520,vx:0,vy:0,r:8,trail:[]};
 try{best=Number(localStorage.getItem('bb-best'))||0;soundOn=localStorage.getItem('bb-sound')!=='false'}catch(e){}
@@ -186,16 +194,22 @@ function beep(freq=600,duration=.08,type='sine',volume=.04){if(!soundOn)return;t
 const SOUND_FILES={pop:'sounds/pop.mp3',paddle:'sounds/paddle.mp3',wall:'sounds/wall.mp3',lose:'sounds/lose.mp3',win:'sounds/win.mp3',gameover:'sounds/gameover.mp3',launch:'sounds/launch.mp3'};
 const FALLBACK={pop:[700,.07],paddle:[420,.055],wall:[240,.03],lose:[140,.22,'triangle',.08],win:[850,.25],gameover:[110,.4,'triangle',.08],launch:[420,.1]};
 const buffers={};let soundsLoading=false;
-function getAudio(){try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume()}catch(e){}return audio}
+function getAudio(){try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended'&&audio.state!=='running')audio.resume()}catch(e){}return audio}
 function loadSounds(){   // called from a user tap (needed on iOS); safe to call many times
   if(soundsLoading||!getAudio())return;soundsLoading=true;
   for(const k in SOUND_FILES)fetch(SOUND_FILES[k]).then(r=>r.ok?r.arrayBuffer():Promise.reject()).then(b=>new Promise((ok,no)=>audio.decodeAudioData(b,ok,no))).then(buf=>buffers[k]=buf).catch(()=>{});
 }
+const SFX_GAP={pop:45,wall:60,paddle:60,launch:0,win:0,lose:0,gameover:0},sfxLast={};let sfxActive=0,master=null;
 function sfx(name,rate=1,vol=1){
   if(!soundOn)return;
+  const now=performance.now(),gap=SFX_GAP[name]||0;
+  if(gap&&now-(sfxLast[name]||0)<gap)return;sfxLast[name]=now;      // many hits in a row = one sound, not 20 stacked ones
   const buf=buffers[name];
-  if(!buf){const f=FALLBACK[name];if(f)beep(f[0]*rate,f[1],f[2],f[3]);return}
-  try{const a=getAudio(),src=a.createBufferSource(),g=a.createGain();src.buffer=buf;src.playbackRate.value=rate;g.gain.value=vol;src.connect(g);g.connect(a.destination);src.start()}catch(e){}
+  if(!buf){const f=FALLBACK[name];if(f&&sfxActive<5){sfxActive++;setTimeout(()=>sfxActive--,f[1]*1000);beep(f[0]*rate,f[1],f[2],f[3])}return}
+  if(sfxActive>=6&&gap)return;                                       // hard cap on simultaneous sounds
+  try{const a=getAudio();if(!a)return;if(!master){master=a.createGain();master.connect(a.destination)}
+    const src=a.createBufferSource(),g=a.createGain();src.buffer=buf;src.playbackRate.value=rate;g.gain.value=vol;src.connect(g);g.connect(master);
+    sfxActive++;src.onended=()=>{sfxActive--;try{src.disconnect();g.disconnect()}catch(e){}};src.start()}catch(e){}
 }
 function syncSoundUI(){$('soundSwitch').setAttribute('aria-checked',soundOn);$('soundLabel').textContent=soundOn?'Sound on':'Sound off'}
 function setSound(v){soundOn=v;syncSoundUI();try{localStorage.setItem('bb-sound',soundOn)}catch(e){}if(soundOn){loadSounds();sfx('launch')}}
@@ -326,13 +340,16 @@ function applyBg(img,T,fade){      // background = plain DOM layers: the browser
 /* ---------- Level setup ---------- */
 function makeBubbles(){
   balls=[];const cols=12,gap=(W-16)/cols,rowGap=4.5,pitch=BR*2+rowGap;
-  const maxRows=Math.max(3,Math.floor((H*.46-24)/pitch));
+  const maxRows=Math.max(3,Math.floor((H*.46-TOP_PAD+4)/pitch));
   const rows=Math.min(6+Math.floor((level-1)/2),10,maxRows);
   for(let row=0;row<rows;row++)for(let col=0;col<cols;col++)
-    balls.push({x:8+gap*(col+.5),y:28+BR+row*pitch,r:BR,ci:row,row,col,rnd:(Math.random()*1000)|0,pi:0,alive:true});
-  alive=balls.length;assignPieces();
+    balls.push({x:8+gap*(col+.5),y:TOP_PAD+BR+row*pitch,r:BR,ci:row,row,col,rnd:(Math.random()*1000)|0,pi:0,alive:true});
+  alive=balls.length;assignPieces();calcLowY();
 }
-let alive=0;
+let alive=0,lowY=0,revives=0;
+const REVIVE_COSTS=[500,1000,1500,2000];      // 1st life 500, 2nd 1000, 3rd 1500, 4th and after 2000
+function reviveCost(){return REVIVE_COSTS[Math.min(revives,REVIVE_COSTS.length-1)]}
+function calcLowY(){lowY=0;for(const b of balls)if(b.y>lowY)lowY=b.y}
 function levelSpeed(){return Math.min(H*(.74+.05*(level-1)),H*1.1)}   // relative to field height -> same feel on any phone
 function resetBall(){ball.x=paddle.x;ball.y=paddle.y-ball.r-3;ball.vx=ball.vy=0;ball.trail.length=0}
 
@@ -354,9 +371,9 @@ loadThemes().then(()=>{renderThemeList();setTheme(modeIndex(),false)});
 
 function overlay(title,text,button,tag='TAKE A BREATH',icon='✧',hint='DRAG ANYWHERE TO MOVE · TAP TO LAUNCH',showInstall=false){
   $('modalTitle').textContent=title;$('modalText').textContent=text;$('play').textContent=button;$('modalEyebrow').textContent=tag;$('modalIcon').textContent=icon;$('modalHint').textContent=hint;
-  $('overlay').dataset.kind=state;if(state==='level')setTimeout(confettiStart,30);$('overlay').hidden=false;$('pause').disabled=true;installVisibility(showInstall)
+  $('reviveBtn').hidden=true;$('overlay').dataset.kind=state;if(state==='level')setTimeout(confettiStart,30);$('overlay').hidden=false;$('pause').disabled=true;installVisibility(showInstall)
 }
-function startGame(){score=0;level=1;lives=3;particles=[];rings=[];floats=[];combo=0;paddle.x=paddle.target=W/2;makeBubbles();resetBall();updateHUD();ready()}
+function startGame(){revives=0;score=0;level=1;lives=3;particles=[];rings=[];floats=[];combo=0;paddle.x=paddle.target=W/2;makeBubbles();resetBall();updateHUD();ready()}
 function ready(){state='ready';$('overlay').hidden=true;$('pause').disabled=false;$('status').textContent='Tap the play area to launch';resetBall()}
 function setSpeed(s){const v=Math.hypot(ball.vx,ball.vy)||1;ball.vx*=s/v;ball.vy*=s/v}
 function keepSteep(){            // avoid nearly-horizontal, boring rallies
@@ -391,7 +408,7 @@ function confettiLoop(t){
 }
 function launch(){if(state!=='ready')return;state='playing';baseSpeed=levelSpeed();ball.vx=baseSpeed*.3*(Math.random()<.5?-1:1);ball.vy=-Math.sqrt(baseSpeed*baseSpeed-ball.vx*ball.vx);$('status').textContent='Find your flow. Keep it alive.'}
 function pauseGame(){saveBest();if(state!=='playing'&&state!=='ready')return;pauseGame.previous=state;state='paused';overlay('A little breather.','Your next great bounce can wait.','Resume play →','PAUSED','Ⅱ','TAP RESUME TO CONTINUE')}
-function resume(){state=pauseGame.previous||'ready';$('overlay').hidden=true;$('pause').disabled=false;lastTime=0;acc=0}
+function resume(){needDraw=true;state=pauseGame.previous||'ready';$('overlay').hidden=true;$('pause').disabled=false;lastTime=0;acc=0}
 $('pause').onclick=pauseGame;
 function openMenu(){if(state==='playing'||state==='ready')pauseGame();syncSoundUI();renderThemeList();$('menuDialog').hidden=false;$('closeMenu').focus()}
 function closeMenu(){$('menuDialog').hidden=true}
@@ -400,10 +417,21 @@ $('importantBtn').onclick=e=>{const b=e.currentTarget;b.classList.remove('wiggle
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('menuDialog').hidden)closeMenu()});
 $('play').onclick=()=>{if(soundOn)loadSounds();sfx('launch');if(state==='paused')resume();else if(state==='level'){level++;makeBubbles();updateHUD();ready()}else startGame()};
 
-function burst(x,y,color){if(particles.length<90)for(let i=0;i<8;i++){const a=Math.random()*Math.PI*2,s=40+Math.random()*150;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.3+Math.random()*.25,r:1.2+Math.random()*2.4,color})}rings.push({x,y,r:8,life:.28,color})}
+function burst(x,y,color){if(lowFx)return;if(particles.length<60)for(let i=0;i<6;i++){const a=Math.random()*Math.PI*2,s=40+Math.random()*150;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.3+Math.random()*.25,r:1.2+Math.random()*2.4,color})}if(rings.length<6)rings.push({x,y,r:8,life:.28,color})}
 function loseLife(){lives--;combo=0;shake=6;sfx(lives<=0?'gameover':'lose');vibrate(40);burst(ball.x,Math.min(ball.y,H-8),'#f5a4bc');updateHUD();
-  if(lives<=0){saveBest();state='over';overlay('One more bounce?','You scored '+score+' points and reached level '+level+'.','Play again →','NICE RUN','↗','YOUR PERSONAL BEST: '+best)}
+  if(lives<=0){saveBest();state='over';overlay('One more bounce?','You scored '+score+' points and reached level '+level+'.','Play again →','NICE RUN','↗','YOUR PERSONAL BEST: '+best);showRevive()}
   else{ready();toast(lives+' '+(lives===1?'life':'lives')+' left. You’ve got this!')}}
+function showRevive(){
+  const c=reviveCost(),b=$('reviveBtn'),ok=coins>=c;
+  $('reviveTxt').textContent='Get 1 life · '+fmt(c)+(ok?'':'  (need '+fmt(c-coins)+' more)');
+  b.disabled=!ok;b.hidden=false;
+}
+function revive(){
+  if(state!=='over')return;const c=reviveCost();if(coins<c)return;
+  coins-=c;revives++;lives=1;persistWallet();updateHUD();sfx('win');
+  ready();toast('Extra life! '+fmt(c)+' coins spent');
+}
+$('reviveBtn').onclick=revive;
 function finishLevel(){saveBest();state='level';sfx('win');vibrate(25);overlay('A clean sweep.','Every bubble, gone. A fresh sky and a faster ball are waiting.','Next level →','LEVEL '+level+' COMPLETE','✦','ROUND SCORE: '+score)}
 
 /* ---------- Simulation ---------- */
@@ -416,27 +444,27 @@ function update(dt){
     const prevY=ball.y;ball.x+=ball.vx*dt;ball.y+=ball.vy*dt;
     if(ball.x<ball.r+3){ball.x=ball.r+3;ball.vx=Math.abs(ball.vx);keepSteep();sfx('wall')}
     if(ball.x>W-ball.r-3){ball.x=W-ball.r-3;ball.vx=-Math.abs(ball.vx);keepSteep();sfx('wall')}
-    if(ball.y<ball.r+3){ball.y=ball.r+3;ball.vy=Math.abs(ball.vy);keepSteep()}
+    if(ball.y<ball.r+1){ball.y=ball.r+1;ball.vy=Math.abs(ball.vy);keepSteep()}
     // paddle (forgiving: +6px each side)
     const half=paddle.w/2+6;
     if(ball.vy>0&&ball.y+ball.r>=paddle.y&&prevY+ball.r<=paddle.y+paddle.h&&ball.x>=paddle.x-half&&ball.x<=paddle.x+half){
       const off=Math.max(-1,Math.min(1,(ball.x-paddle.x)/half)),ang=off*1.08,sp=Math.min(Math.hypot(ball.vx,ball.vy)*1.012,H*1.25);
       ball.vx=Math.sin(ang)*sp;ball.vy=-Math.cos(ang)*sp;ball.y=paddle.y-ball.r-.1;combo=0;sfx('paddle',1+Math.abs(off)*.25)}
-    for(const b of balls){
-      if(!b.alive)continue;
+    if(ball.y<lowY+BR+ball.r+2)for(let bi=0;bi<balls.length;bi++){      // only test bubbles while the ball is up in the field
+      const b=balls[bi];
       const dx=ball.x-b.x,dy=ball.y-b.y,d2=dx*dx+dy*dy,rr=ball.r+b.r;
       if(d2<rr*rr){
-        b.alive=false;alive--;const dist=Math.sqrt(d2),nx=dist?dx/dist:0,ny=dist?dy/dist:1,dot=ball.vx*nx+ball.vy*ny;
+        balls[bi]=balls[balls.length-1];balls.pop();alive--;calcLowY();const dist=Math.sqrt(d2),nx=dist?dx/dist:0,ny=dist?dy/dist:1,dot=ball.vx*nx+ball.vy*ny;
         if(dot<0){ball.vx-=2*dot*nx;ball.vy-=2*dot*ny;keepSteep()}
         ball.x=b.x+nx*(rr+.2);ball.y=b.y+ny*(rr+.2);
         score+=10;combo++;const gain=5*(1<<Math.min(combo-1,5));coins+=gain;      // 1st bubble of a shot = 5, 2nd = 10, 3rd = 20 ... (resets when the ball touches the paddle)
-        if(floats.length>10)floats.shift();floats.push({x:b.x,y:b.y,n:gain,life:.9});
+        if(floats.length>6)floats.shift();floats.push({x:b.x,y:b.y,n:gain,life:.9});
         burst(b.x,b.y,COLORS[b.ci%COLORS.length]);sfx('pop',1+Math.min(combo,14)*.05);hudDirty=true;
         if(alive<=0)finishLevel();
         break;
       }
     }
-    ball.trail.unshift(ball.x,ball.y);if(ball.trail.length>14)ball.trail.length=14;
+    ball.trail.unshift(ball.x,ball.y);if(ball.trail.length>10)ball.trail.length=10;
     if(ball.y-ball.r>H+10)loseLife();
   }
   for(const p of particles){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=120*dt}
@@ -448,6 +476,7 @@ function update(dt){
 
 /* ---------- Render ---------- */
 function rr(x,y,w,h,r){ctx.beginPath();if(ctx.roundRect)ctx.roundRect(x,y,w,h,r);else{ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}}
+let paddleGrad=null;
 function draw(){
   ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.restore();
   ctx.save();if(shake)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);
@@ -456,26 +485,30 @@ function draw(){
   for(const r of rings){ctx.globalAlpha=r.life/.28;ctx.strokeStyle=r.color;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,6.2832);ctx.stroke()}
   for(const p of particles){ctx.globalAlpha=Math.min(1,p.life/.25);ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.2832);ctx.fill()}
   ctx.globalAlpha=1;
-  if(floats.length){ctx.textAlign='center';ctx.lineJoin='round';ctx.lineWidth=3;
-    for(const f of floats){ctx.globalAlpha=Math.min(1,f.life/.35);ctx.font='800 '+(12+Math.log2(f.n/5)*2.2)+'px system-ui,sans-serif';ctx.strokeStyle='rgba(60,35,0,.75)';const tx='+'+f.n,sz2=14+Math.log2(f.n/5)*2,hasC=coinImg.complete&&coinImg.naturalWidth,tw=ctx.measureText(tx).width,off=hasC?(sz2+3)/2:0;
+  if(floats.length){ctx.textAlign='center';ctx.lineJoin='round';ctx.lineWidth=3;ctx.strokeStyle='rgba(60,35,0,.75)';const hasC=coinImg.complete&&coinImg.naturalWidth;
+    for(const f of floats){const lv=Math.log2(f.n/5),sz2=14+lv*2,tx='+'+f.n,tw=tx.length*(7+lv*1.3),off=hasC?(sz2+3)/2:0;
+      ctx.globalAlpha=Math.min(1,f.life/.35);ctx.font='800 '+((12+lv*2.2)|0)+'px system-ui,sans-serif';
       ctx.strokeText(tx,f.x+off,f.y);ctx.fillStyle=f.n>5?'#ffe27a':'#fff4c2';ctx.fillText(tx,f.x+off,f.y);
       if(hasC)ctx.drawImage(coinImg,f.x+off-tw/2-sz2-3,f.y-sz2*.82,sz2,sz2)}
     ctx.globalAlpha=1}
   const n=ball.trail.length/2;
-  for(let i=n-1;i>0;i--){ctx.fillStyle='rgba(204,192,255,'+(.25*(1-i/n))+')';ctx.beginPath();ctx.arc(ball.trail[i*2],ball.trail[i*2+1],ball.r*(1-i/(n+1)),0,6.2832);ctx.fill()}
+  if(!lowFx)for(let i=n-1;i>0;i--){ctx.fillStyle='rgba(204,192,255,'+(.25*(1-i/n))+')';ctx.beginPath();ctx.arc(ball.trail[i*2],ball.trail[i*2+1],ball.r*(1-i/(n+1)),0,6.2832);ctx.fill()}
   ctx.fillStyle='#f7f2ff';ctx.beginPath();ctx.arc(ball.x,ball.y,ball.r,0,6.2832);ctx.fill();
-  const pg=ctx.createLinearGradient(paddle.x-paddle.w/2,0,paddle.x+paddle.w/2,0);pg.addColorStop(0,'#65c9ba');pg.addColorStop(.5,'#b6ffdc');pg.addColorStop(1,'#65c9ba');
-  ctx.fillStyle=pg;rr(paddle.x-paddle.w/2,paddle.y,paddle.w,paddle.h,7);ctx.fill();
-  ctx.fillStyle='#ffffff66';rr(paddle.x-14,paddle.y+4,28,2,1);ctx.fill();
+  if(!paddleGrad){paddleGrad=ctx.createLinearGradient(0,0,0,paddle.h);paddleGrad.addColorStop(0,'#4fe8c0');paddleGrad.addColorStop(.5,'#12b08c');paddleGrad.addColorStop(1,'#07756c')}
+  ctx.save();ctx.translate(paddle.x,paddle.y);rr(-paddle.w/2,0,paddle.w,paddle.h,7);
+  ctx.lineJoin='round';ctx.lineWidth=4.5;ctx.strokeStyle='rgba(3,12,30,.7)';ctx.stroke();       // dark outer rim: visible on light AND dark backgrounds
+  ctx.fillStyle=paddleGrad;ctx.fill();
+  ctx.lineWidth=1.6;ctx.strokeStyle='rgba(255,255,255,.95)';ctx.stroke();                         // bright edge
+  ctx.fillStyle='rgba(255,255,255,.55)';rr(-paddle.w/2+9,2.5,paddle.w-18,2.2,1.1);ctx.fill();ctx.restore();
   if(state==='ready'){ctx.fillStyle='#b4c0d8';ctx.font='700 12px system-ui,sans-serif';ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(5,10,25,.65)';ctx.lineJoin='round';ctx.strokeText('TAP TO LAUNCH',W/2,paddle.y-48);ctx.fillStyle='#fff';ctx.fillText('TAP TO LAUNCH',W/2,paddle.y-48)}
   ctx.restore();
 }
 const STEP=1/120;
-let perfPrev=0,perfSum=0,perfN=0;
+let needDraw=true,perfPrev=0,perfSum=0,perfN=0;
 function watchPerformance(t){      // slow phone? quietly lower the canvas resolution until it runs smoothly
   const d=t-perfPrev;perfPrev=t;
   if(state!=='playing'||d>100||d<=0){perfSum=perfN=0;return}
-  perfSum+=d;if(++perfN>=90){const avg=perfSum/perfN;perfSum=perfN=0;if(avg>28&&dprCap>1){dprCap=Math.max(1,dprCap-.5);resize()}}
+  perfSum+=d;if(++perfN>=90){const avg=perfSum/perfN;perfSum=perfN=0;if(avg>24){if(dprCap>1){dprCap=Math.max(1,dprCap-.5);resize()}else if(!lowFx){lowFx=true;particles.length=rings.length=0}}}
 }
 function frame(t){
   watchPerformance(t);
@@ -483,7 +516,7 @@ function frame(t){
   acc+=Math.min((t-lastTime)/1000,.034);lastTime=t;      // after a hiccup, slow down a touch instead of leaping
   if(state==='playing'||state==='ready'){while(acc>=STEP){update(STEP);acc-=STEP}}
   else{acc=0;update(0)}
-  draw();if(hudDirty){hudDirty=false;updateHUD()}requestAnimationFrame(frame);
+  if(state==='playing'||state==='ready'||$('overlay').hidden||needDraw){needDraw=false;draw()}if(hudDirty){hudDirty=false;updateHUD()}requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
 
