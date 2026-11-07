@@ -72,7 +72,7 @@ canvas{display:block;touch-action:none;flex:none;position:relative;z-index:1}
 .primary{display:block;width:100%;padding:16px 24px;background:var(--acc,#2f8cff);color:#fff;border:0;border-radius:15px;font-weight:800;font-size:15px;box-shadow:0 8px 20px rgba(var(--acc-rgb,47,140,255),.35)}
 .primary:active{filter:brightness(1.08);transform:scale(.98)}
 .revive{background:linear-gradient(180deg,#ffbe2e,#f5a60b);color:#4a2c00;margin-bottom:10px;box-shadow:0 8px 20px rgba(245,166,11,.4);display:flex!important;align-items:center;justify-content:center;gap:2px}
-.revive:disabled{box-shadow:none;filter:grayscale(.5)}
+.revive:disabled{box-shadow:none;filter:grayscale(.5)} .revive[hidden]{display:none!important}
 .ghost{display:block;width:100%;margin-top:10px;padding:13px 20px;border:1px solid rgba(47,140,255,.4);background:#e4f1ff;border-radius:14px;color:#2a62c4;font-weight:650;font-size:13px}
 .hint{font-size:10px!important;letter-spacing:.6px;margin:16px auto 0!important;padding-top:14px;border-top:1px solid #12305a1a;color:#7a93b5!important;max-width:none!important}
 /* win modal: shine sweep, pulsing star, shimmering title (confetti is drawn on #confetti) */
@@ -180,7 +180,7 @@ let COLORS=DEFAULT_COLORS;
 
 let W=VW,H=600,scale=1,dpr=1,state='menu',score=0,level=1,lives=3,best=0,combo=0,coins=0,unlocked=[];
 let balls=[],particles=[],rings=[],floats=[],keys={},lastTime=0,acc=0,shake=0,soundOn=true,audio=null;
-let lowFx=false,sprites=[],baseSpeed=500,dprCap=2,spritesReady=false;
+let lowFx=false,sprites=[],baseSpeed=500,dprCap=1.5,spritesReady=false,bubbleLayer=null;
 const paddle={x:VW/2,target:VW/2,y:540,w:92,h:14};
 const ball={x:VW/2,y:520,vx:0,vy:0,r:8,trail:[]};
 try{best=Number(localStorage.getItem('bb-best'))||0;soundOn=localStorage.getItem('bb-sound')!=='false'}catch(e){}
@@ -230,6 +230,7 @@ function updateHUD(){
   if(lives!==hudLast.lives){hudLast.lives=lives;hudEl.lives.textContent=lives;hudEl.heart.textContent=Array.from({length:3},(_,i)=>i<lives?'●':'○').join(' ')}
   if(score>best)best=score;
 }
+updateHUD(); // show the saved coin balance as soon as the game opens
 
 /* ---------- Pre-rendered sprites & background (big speed win: no per-frame gradients/dots) ---------- */
 function shade(hex,t){const n=parseInt(hex.slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;const m=t<0?0:255,k=Math.abs(t);r=Math.round(r+(m-r)*k);g=Math.round(g+(m-g)*k);b=Math.round(b+(m-b)*k);return 'rgb('+r+','+g+','+b+')'}
@@ -269,7 +270,7 @@ async function setTheme(i,fade=true){
   const [b,...imgs]=await Promise.all([loadImg(T.background),...specs.map(p=>loadImg(p.image))]);
   if(pendingTheme!==i)return false;                       // a newer request replaced this one
   themeIdx=i;COLORS=Array.isArray(T.colors)&&T.colors.length?T.colors:DEFAULT_COLORS;curBgImg=b;curPieces=specs.map((p,k)=>({...p,img:imgs[k]}));assignPieces();
-  applyBg(b,T,fade);if(spritesReady)buildSprites();
+  applyBg(b,T,fade);if(spritesReady){buildSprites();rebuildBubbleLayer()}
   const n=THEMES[i+1];if(n){loadImg(n.background);normPieces(n).forEach(p=>loadImg(p.image))}   // preload the next world
   return true;
 }
@@ -326,6 +327,20 @@ function buildSprites(){
     return s;
   }));
 }
+function rebuildBubbleLayer(){
+  if(!canvas.width||!canvas.height)return;
+  if(!bubbleLayer)bubbleLayer=document.createElement('canvas');
+  bubbleLayer.width=canvas.width;bubbleLayer.height=canvas.height;
+  const layerCtx=bubbleLayer.getContext('2d');
+  if(!layerCtx)return;
+  layerCtx.setTransform(dpr*scale,0,0,dpr*scale,0,0);
+  const sz=BR*2+4;
+  for(const b of balls){
+    if(!b.alive||!sprites.length)continue;
+    const sp=sprites[b.pi%sprites.length];
+    if(sp&&sp.length)layerCtx.drawImage(sp[b.ci%sp.length],b.x-BR-2,b.y-BR-2,sz,sz);
+  }
+}
 let bgFlip=0;
 function applyBg(img,T,fade){      // background = plain DOM layers: the browser/GPU composites them, canvas only draws bubbles
   const L=[$('bgA'),$('bgB')],n=L[bgFlip^=1],o=L[bgFlip^1],v=typeof T.veil==='number'?T.veil:.5;
@@ -344,13 +359,13 @@ function makeBubbles(){
   const rows=Math.min(6+Math.floor((level-1)/2),10,maxRows);
   for(let row=0;row<rows;row++)for(let col=0;col<cols;col++)
     balls.push({x:8+gap*(col+.5),y:TOP_PAD+BR+row*pitch,r:BR,ci:row,row,col,rnd:(Math.random()*1000)|0,pi:0,alive:true});
-  alive=balls.length;assignPieces();calcLowY();
+  alive=balls.length;assignPieces();calcLowY();rebuildBubbleLayer();
 }
 let alive=0,lowY=0,revives=0;
 const REVIVE_COSTS=[500,1000,1500,2000];      // 1st life 500, 2nd 1000, 3rd 1500, 4th and after 2000
 function reviveCost(){return REVIVE_COSTS[Math.min(revives,REVIVE_COSTS.length-1)]}
 function calcLowY(){lowY=0;for(const b of balls)if(b.y>lowY)lowY=b.y}
-function levelSpeed(){return Math.min(H*(.74+.05*(level-1)),H*1.1)}   // relative to field height -> same feel on any phone
+function levelSpeed(){return H*.82}   // one steady speed at every level
 function resetBall(){ball.x=paddle.x;ball.y=paddle.y-ball.r-3;ball.vx=ball.vy=0;ball.trail.length=0}
 
 function resize(){
@@ -364,7 +379,7 @@ function resize(){
   paddle.y=H-PAD_BOTTOM;
   if(!balls.length)makeBubbles();
   if(state==='playing')ball.y+=H-oldH;else resetBall();
-  buildSprites();spritesReady=true;
+  buildSprites();spritesReady=true;rebuildBubbleLayer();
 }
 new ResizeObserver(resize).observe(stage);resize();
 loadThemes().then(()=>{renderThemeList();setTheme(modeIndex(),false)});
@@ -448,16 +463,16 @@ function update(dt){
     // paddle (forgiving: +6px each side)
     const half=paddle.w/2+6;
     if(ball.vy>0&&ball.y+ball.r>=paddle.y&&prevY+ball.r<=paddle.y+paddle.h&&ball.x>=paddle.x-half&&ball.x<=paddle.x+half){
-      const off=Math.max(-1,Math.min(1,(ball.x-paddle.x)/half)),ang=off*1.08,sp=Math.min(Math.hypot(ball.vx,ball.vy)*1.012,H*1.25);
-      ball.vx=Math.sin(ang)*sp;ball.vy=-Math.cos(ang)*sp;ball.y=paddle.y-ball.r-.1;combo=0;sfx('paddle',1+Math.abs(off)*.25)}
+      const off=Math.max(-1,Math.min(1,(ball.x-paddle.x)/half)),ang=off*1.08,sp=baseSpeed;
+      ball.vx=Math.sin(ang)*sp;ball.vy=-Math.cos(ang)*sp;setSpeed(baseSpeed);ball.y=paddle.y-ball.r-.1;combo=0;sfx('paddle',1+Math.abs(off)*.25)}
     if(ball.y<lowY+BR+ball.r+2)for(let bi=0;bi<balls.length;bi++){      // only test bubbles while the ball is up in the field
       const b=balls[bi];
       const dx=ball.x-b.x,dy=ball.y-b.y,d2=dx*dx+dy*dy,rr=ball.r+b.r;
       if(d2<rr*rr){
-        balls[bi]=balls[balls.length-1];balls.pop();alive--;calcLowY();const dist=Math.sqrt(d2),nx=dist?dx/dist:0,ny=dist?dy/dist:1,dot=ball.vx*nx+ball.vy*ny;
-        if(dot<0){ball.vx-=2*dot*nx;ball.vy-=2*dot*ny;keepSteep()}
+        balls[bi]=balls[balls.length-1];balls.pop();alive--;calcLowY();rebuildBubbleLayer();const dist=Math.sqrt(d2),nx=dist?dx/dist:0,ny=dist?dy/dist:1,dot=ball.vx*nx+ball.vy*ny;
+        if(dot<0){ball.vx-=2*dot*nx;ball.vy-=2*dot*ny;setSpeed(baseSpeed);keepSteep()}
         ball.x=b.x+nx*(rr+.2);ball.y=b.y+ny*(rr+.2);
-        score+=10;combo++;const gain=5*(1<<Math.min(combo-1,5));coins+=gain;      // 1st bubble of a shot = 5, 2nd = 10, 3rd = 20 ... (resets when the ball touches the paddle)
+        score+=10;combo++;const gain=5*(1<<Math.min(combo-1,5));coins+=gain;persistWallet();      // save each coin award immediately
         if(floats.length>6)floats.shift();floats.push({x:b.x,y:b.y,n:gain,life:.9});
         burst(b.x,b.y,COLORS[b.ci%COLORS.length]);sfx('pop',1+Math.min(combo,14)*.05);hudDirty=true;
         if(alive<=0)finishLevel();
@@ -480,8 +495,7 @@ let paddleGrad=null;
 function draw(){
   ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.restore();
   ctx.save();if(shake)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);
-  const sz=BR*2+4;
-  for(const b of balls)if(b.alive){const sp=sprites[b.pi%sprites.length];ctx.drawImage(sp[b.ci%sp.length],b.x-BR-2,b.y-BR-2,sz,sz)}
+  if(bubbleLayer)ctx.drawImage(bubbleLayer,0,0,W,H);
   for(const r of rings){ctx.globalAlpha=r.life/.28;ctx.strokeStyle=r.color;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,6.2832);ctx.stroke()}
   for(const p of particles){ctx.globalAlpha=Math.min(1,p.life/.25);ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.2832);ctx.fill()}
   ctx.globalAlpha=1;
